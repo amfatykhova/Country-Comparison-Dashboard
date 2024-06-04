@@ -1,0 +1,54 @@
+/* Tool tip formatting is from the class exercises from 2/22/24 because I really liked how it looked*/
+.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 8px;
+    font: 18px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 8px;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+#countryOne {
+    float:left; /* add this */
+}
+
+#title {
+    text-align:center;
+}
+
+p {
+  font-size: 28px;
+}
+
+li {
+  font-size: 28px;
+}
+
+h2 {
+  font-size: 32px;
+}
+
+h1 {
+  font-size: 40px;
+}
+
+#box {
+  width: 2420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#scatterPlot {
+  float: left;
+}
+
+#chart3_ALT {
+  float: left;
+}
+
+#chart3 {
+  float: left;
+}

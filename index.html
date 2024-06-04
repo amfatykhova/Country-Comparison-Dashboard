@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title >Homework 3</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <script type='text/javascript' > 
+        let globalCountrySelection1;
+        globalCountrySelection1 = "Argentina";
+
+        let globalCountrySelection2;
+        globalCountrySelection2 = "Argentina";
+
+        // for scatter plot / time:
+        var countrySelectedNow;
+
+        var currScatterX;
+        var currScatterY;
+        var currScatterData;
+
+        var currScatterY2;
+        var currScatterData2;
+
+        // basically the lines are updates differently than the bar chart and the scatter plots
+        // so what these do, is say only create a whole new line if it's the initial chart
+        // every time the graph updates actually just update the data for the existing line3 variable
+        // instead of creating a new line.
+        let initialLine = true;
+        let initialLine_ALT = true;
+
+        var barMargin = { top: 40, right: 5, bottom: 40, left: 75 };
+        var barWidth = 1200 - barMargin.left - barMargin.right;
+        var barHeight = 450 - barMargin.top - barMargin.bottom;
+
+        var lineMargin = { top: 60, right: 100, bottom: 10, left: 60 };
+        var lineWidth = 598 - lineMargin.left - lineMargin.right;
+        var lineHeight = 350 - lineMargin.top - lineMargin.bottom;
+
+        var scatterMargin = { top: 50, right: 200, bottom: 50, left: 100 };
+        var scatterWidth = 2400 - scatterMargin.left - scatterMargin.right;
+        var scatterHeight = 850 - scatterMargin.top - scatterMargin.bottom;
+
+        var pieWidth = 598;
+        var pieHeight = 400;
+        var pieMargin = 40;
+
+        var dateShapesHeight = 60
+        var dateShapesWidth = 2400;
+
+        var labelsHeight = 40
+        var labelsWidth = 2400;
+
+
+      </script>
+    <h1 style="font-family: sans-serif" id="title">Country Comparison Dashboard</h1>
+    <h2 style="font-family: sans-serif" id="title">HW 4: Amelia Fatykhova</h2>
+    <div id="dashboard">
+      <div id="box">
+        <h2 style="font-family: sans-serif">Overview</h2>
+        <p style="font-family: sans-serif" id="description">Welcome to the country comparison dashboard! This 
+        dashboard allows you to select two countries and compare their metrics. You can directly compare "birth rate / time", "death rate / time", <br>
+        "life expectancy / time", "population growth / time", and the ratio of rural to urban average populations within a given country. In addition, you can scroll down to view two scatter plots.
+        <br>
+        <br>
+        The two scatter plots bellow are not dependant on country selection, but do highlight data points that correspond to the two currently chosen countries. These scatter plots
+        function as exploratory visualizations. For the first scatter plot, users can customize the X and Y axes with the full range of columns in the dataset. For the second 
+        scatter plot, users can customize the Y axis, but the X axis is always set to a timeScale by year.
+
+        <br>
+        <br>
+        These exploratory scatterplots allow users to identify datapoints and countries of interest. They assist users with deciding which two countries they want to compare next.
+         </p>
+         <h2 style="font-family: sans-serif">Interactability: </h2>
+         <p style="font-family: sans-serif" id="description2">
+          This dashboard has several interactability featuers:
+        </p>
+        <ul style="font-family: sans-serif">
+          <li>There is a "time brush". Each shape represents a year. When the brush is used, bars and scatter points that are in that year are highlighted in green.</li>
+          <li>Each chart has a tool tip. Hover your mouse over a chart element to see the data that it repersents. </li>
+          <li>There are several selection menues. The first is a country selection. There are drop downs under "Country 1" and "Country 2" that allow you to select a country. The first 4 rows of charts are updated accordingly. </li>
+          <li>There are two scatter charts at the bottom of the dashboard. These don't change with the country selection, but the currently selected countries are highlighted: their dots are larger with greater staturation.</li>
+          <li>The first of the two scatter charts has X and Y axis selectors right above it. This allows the user to explore the relationship between different variables for every country in one view. This may assist users in determining which two countries they want to compare next. When a dot is hovered over, all the other dots from that country turn black so users can see "country clusters".</li>
+          <li>The second of the two scatter charts just has a Y axis selector. The X axis is always "year". This allows users to explore the relationship between variables and time for every country in one view. The tool tip for this scatter chart also highlights all of dots for a specific country by turning them black when you hover over a particular dot. That way, users can see the "line
+             over time" for a particular country.
+          </li>
+        </ul>
+         <h2 style="font-family: sans-serif">Time Brush: </h2>
+        <div id="svg_divider_00">
+          <svg height="30" width="2400">
+              <defs>
+                <linearGradient id="divider" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:rgb(36, 225, 165)" />
+                  <stop offset="50%" style="stop-color:rgb(34, 102, 229)" />
+                  <stop offset="100%" style="stop-color:rgb(6, 218, 255)" />
+                </linearGradient>
+              </defs>
+              <rect width="2400" height="10" x="0" y="10" fill="url(#divider)" />
+          </svg>
+        </div>
+        <div id="date_shapes">
+          <svg id = "dateShapes" style="border: 2px solid #7b7676;"></svg>
+          <svg id = "dateLabels"></svg>
+        </div>
+        <div id="svg_divider_0">
+          <svg height="30" width="2400">
+              <defs>
+                <linearGradient id="divider" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:rgb(36, 225, 165)" />
+                  <stop offset="50%" style="stop-color:rgb(34, 102, 229)" />
+                  <stop offset="100%" style="stop-color:rgb(6, 218, 255)" />
+                </linearGradient>
+              </defs>
+              <rect width="2400" height="10" x="0" y="10" fill="url(#divider)" />
+          </svg>
+        </div>
+        <div id="countryOne">
+          <h2 style="font-family: sans-serif" id="subTitle1">Country #1</h2>
+          <div id="selectors1">
+            <label for="countrySelect1" style="font-family: sans-serif">Select a country: </label>
+            <div id="countrySelect1"></div>
+          </div>
+          <div id="topRow1">
+            <div id="pie1">
+              <img src="flags/Argentina.png" id="flagImage1" height=400 width="598" style="border: 2px solid #7b7676;">
+              <svg id = "pieChart1" style="border: 2px solid #7b7676;"></svg>
+            </div>
+          </div>
+          <div id="BarCharts1">
+            <div id="chart1">
+              <svg id = "birthRatePerYear" style="border: 2px solid #7b7676;"></svg>
+            </div>
+            <div id="chart2">
+                <svg id = "deathRatePerYear" style="border: 2px solid #7b7676;"></svg>
+            </div>
+            <div id="LineCharts1">
+              <div id="chart3">
+                <svg id = "lifeExpectancyPerYear" style="border: 2px solid #7b7676;"></svg>
+              </div>
+              <div id="chart4">
+                <svg id = "populationGrowthOverTime" style="border: 2px solid #7b7676;"></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="countryTwo">
+          <h2 style="font-family: sans-serif" id="subTitle2">Country #2</h2>
+          <div id="selectors2">
+            <label for="countrySelect2" style="font-family: sans-serif">Select a country: </label>
+            <div id="countrySelect2"></div>
+          </div>
+          <div id="topRow1">
+            <div id="pie1">
+              <img src="flags/Argentina.png" id="flagImage2" height=400 width="598" style="border: 2px solid #7b7676;">
+              <svg id = "pieChart1_ALT" style="border: 2px solid #7b7676;"></svg>
+            </div>
+          </div>
+          <div id="BarCharts2">
+            <div id="chart1_ALT">
+              <svg id = "birthRatePerYear_ALT" style="border: 2px solid #7b7676;"></svg>
+            </div>
+            <div id="chart2_ALT">
+                <svg id = "deathRatePerYear_ALT" style="border: 2px solid #7b7676;"></svg>
+            </div>
+            <div id="LineCharts2">
+              <div id="chart3_ALT">
+                <svg id = "lifeExpectancyPerYear_ALT" style="border: 2px solid #7b7676;"></svg>
+              </div>
+              <div id="chart4_ALT">
+                <svg id = "populationGrowthOverTime_ALT" style="border: 2px solid #7b7676;"></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="svg_divider_1">
+          <svg height="30" width="2400">
+              <defs>
+                <linearGradient id="divider" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:rgb(36, 225, 165)" />
+                  <stop offset="50%" style="stop-color:rgb(34, 102, 229)" />
+                  <stop offset="100%" style="stop-color:rgb(6, 218, 255)" />
+                </linearGradient>
+              </defs>
+              <rect width="2400" height="10" x="0" y="10" fill="url(#divider)" />
+          </svg>
+        </div>
+        <div>
+          <label for="scatterYAxisSelector1" style="font-family: sans-serif">Y-Axis Scatter Plot: </label>
+            <select class="custom-select" id="scatterYAxisSelector1" onchange="inputsChanged()">
+              <option value="BirthRate">Birth Rate</option>
+              <option value="DeathRate">Death Rate</option>
+              <option value="FertilityRate">Fertility Rate</option>
+              <option value="LifeExpectancyFemale">Life Expectancy Female</option>
+              <option value="LifeExpectancyMale">Life Expectancy Male</option>
+              <option value="LifeExpectancyTotal">Life Expectancy Total</option>
+              <option value="PopulationTotal">PopulationTotal</option>
+              <option value="MobileCellularSubscriptions">Mobile Cellular Subscriptions</option>
+              <option value="MobileCellularSubscriptionsPerHundred">Mobile Cellular Subscriptions PerHundred</option>
+              <option value="TelephoneLines">Telephone Lines</option>
+              <option value="TelephoneLinesPerHundred">Telephone Lines Per Hundred</option>
+              <option value="AgriculturalLand">Agricultural Land</option>
+              <option value="AgriculturalLandPercent">Agricultural LandPercent</option>
+              <option value="ArableLand">Arable Land</option>
+              <option value="ArableLandPercent">Arable Land Percent</option>
+              <option value="LandArea">Land Area</option>
+              <option value="RuralPopulation">Rural Population</option>
+              <option value="SurfaceArea">Surface Area</option>
+              <option value="PopulationDensity">Population Density</option>
+              <option value="UrbanPopulationPercent">Urban Population Percent</option>
+            </select>  
+            <label for="scatterXAxisSelector1" style="font-family: sans-serif">X-Axis Scatter Plot: </label>
+            <select class="custom-select" id="scatterXAxisSelector1" onchange="inputsChanged()">
+              <option value="BirthRate">Birth Rate</option>
+              <option value="DeathRate">Death Rate</option>
+              <option value="FertilityRate">Fertility Rate</option>
+              <option value="LifeExpectancyFemale">Life Expectancy Female</option>
+              <option value="LifeExpectancyMale">Life Expectancy Male</option>
+              <option value="LifeExpectancyTotal">Life Expectancy Total</option>
+              <option value="PopulationTotal">PopulationTotal</option>
+              <option value="MobileCellularSubscriptions">Mobile Cellular Subscriptions</option>
+              <option value="MobileCellularSubscriptionsPerHundred">Mobile Cellular Subscriptions PerHundred</option>
+              <option value="TelephoneLines">Telephone Lines</option>
+              <option value="TelephoneLinesPerHundred">Telephone Lines Per Hundred</option>
+              <option value="AgriculturalLand">Agricultural Land</option>
+              <option value="AgriculturalLandPercent">Agricultural LandPercent</option>
+              <option value="ArableLand">Arable Land</option>
+              <option value="ArableLandPercent">Arable Land Percent</option>
+              <option value="LandArea">Land Area</option>
+              <option value="RuralPopulation">Rural Population</option>
+              <option value="SurfaceArea">Surface Area</option>
+              <option value="PopulationDensity">Population Density</option>
+              <option value="UrbanPopulationPercent">Urban Population Percent</option>
+            </select> 
+          <svg id = "scatterPlot" style="border: 2px solid #7b7676;"></svg>
+        </div>
+        <div id="svg_divider_2">
+          <svg height="30" width="2400">
+              <defs>
+                <linearGradient id="divider" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:rgb(36, 225, 165)" />
+                  <stop offset="50%" style="stop-color:rgb(34, 102, 229)" />
+                  <stop offset="100%" style="stop-color:rgb(6, 218, 255)" />
+                </linearGradient>
+              </defs>
+              <rect width="2400" height="10" x="0" y="10" fill="url(#divider)" />
+          </svg>
+        </div>
+        <div>
+          <label for="scatterYAxisSelector2" style="font-family: sans-serif">Second Scatter Plot Y-Axis Selector: </label>
+            <select class="custom-select" id="scatterYAxisSelector2" onchange="inputsChanged2()">
+              <option value="BirthRate">Birth Rate</option>
+              <option value="DeathRate">Death Rate</option>
+              <option value="FertilityRate">Fertility Rate</option>
+              <option value="LifeExpectancyFemale">Life Expectancy Female</option>
+              <option value="LifeExpectancyMale">Life Expectancy Male</option>
+              <option value="LifeExpectancyTotal">Life Expectancy Total</option>
+              <option value="PopulationTotal">PopulationTotal</option>
+              <option value="MobileCellularSubscriptions">Mobile Cellular Subscriptions</option>
+              <option value="MobileCellularSubscriptionsPerHundred">Mobile Cellular Subscriptions PerHundred</option>
+              <option value="TelephoneLines">Telephone Lines</option>
+              <option value="TelephoneLinesPerHundred">Telephone Lines Per Hundred</option>
+              <option value="AgriculturalLand">Agricultural Land</option>
+              <option value="AgriculturalLandPercent">Agricultural LandPercent</option>
+              <option value="ArableLand">Arable Land</option>
+              <option value="ArableLandPercent">Arable Land Percent</option>
+              <option value="LandArea">Land Area</option>
+              <option value="RuralPopulation">Rural Population</option>
+              <option value="SurfaceArea">Surface Area</option>
+              <option value="PopulationDensity">Population Density</option>
+              <option value="UrbanPopulationPercent">Urban Population Percent</option>
+            </select> 
+          <svg id = "scatterTime" style="border: 2px solid #7b7676;"></svg>
+        </div>
+      </div>
+    </div>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="src/datalist.js"></script>
+    <script src="src/birthRatePerYear.js"></script>
+    <script src="src/deathRatePerYear.js"></script>
+    <script src="src/lifeExpectancyPerYear.js"></script>
+    <script src="src/populationGrowthOverTime.js"></script>
+    <script src="src/scatterPlot.js"></script>
+    <script src="src/scatterPlotTime.js"></script>
+    <script src="src/pieChart.js"></script>
+    <script src="src/dateShapes.js"></script>
+  </body>
+</html>
